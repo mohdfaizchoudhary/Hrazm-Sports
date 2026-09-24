@@ -52,7 +52,7 @@ class CreateRazorpayOrderView(APIView):
              for item in cart_items),
             Decimal("0.00"),
         )
-        shipping_charge = Decimal("100.00") if subtotal > Decimal("999.00") else Decimal("0.00")
+        shipping_charge = Decimal("100.00") if subtotal < Decimal("999.00") else Decimal("0.00")
         total = subtotal + shipping_charge
 
         try:

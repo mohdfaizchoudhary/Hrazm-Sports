@@ -33,7 +33,7 @@ class CartSerializer(serializers.ModelSerializer):
         return sum(item.quantity for item in obj.items.all())
 
     def get_shipping_charge(self, obj):
-        return 100 if self.get_total_amount(obj) > 999 else 0
+        return 100 if self.get_total_amount(obj) < 999 else 0
 
     def get_grand_total(self, obj):
         return self.get_total_amount(obj) + self.get_shipping_charge(obj)
