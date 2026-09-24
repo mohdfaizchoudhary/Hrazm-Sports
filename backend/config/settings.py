@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "cart",
     "orders",
     "payments",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
@@ -119,9 +120,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # CORS Configuration
-CORS_ALLOWED_ORIGINS = [
-    origin.strip() for origin in os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",") if origin.strip()
-]
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 # Razorpay keys are server-side configuration. Keep the secret out of the frontend.
