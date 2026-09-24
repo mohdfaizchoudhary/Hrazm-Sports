@@ -84,7 +84,7 @@ class CreateOrderView(APIView):
                 "subtotal": subtotal
             })
 
-        shipping_charge = Decimal("100.00") if subtotal_amount < Decimal("999.00") else Decimal("0.00")
+        shipping_charge = Decimal("100.00") if subtotal_amount <= Decimal("999.00") else Decimal("0.00")
         total_amount = subtotal_amount + shipping_charge
 
         order = Order.objects.create(

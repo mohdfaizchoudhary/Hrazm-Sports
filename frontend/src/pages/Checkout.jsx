@@ -41,7 +41,7 @@ export default function Checkout() {
   // Set the store's UPI ID here
   const OWNER_UPI_ID = "9068104055-2@ybl"; 
   const subtotal = Number(cart?.total_amount || 0);
-  const shippingCharge = Number(cart?.shipping_charge ?? (subtotal > 999 ? 100 : 0));
+  const shippingCharge = Number(cart?.shipping_charge ?? (subtotal > 999 ? 0 : 100));
   const grandTotal = Number(cart?.grand_total ?? subtotal + shippingCharge);
 
   // Auto-filled UPI amount URI

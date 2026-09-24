@@ -27,7 +27,7 @@ export const CartProvider = ({ children }) => {
   const recalculateCart = (items) => {
     const total_items = items.reduce((sum, item) => sum + item.quantity, 0);
     const total_amount = items.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
-    const shipping_charge = total_amount > 999 ? 100 : 0;
+    const shipping_charge = total_amount > 999 ? 0 : 100;
     return { items, total_items, total_amount: total_amount.toFixed(2), shipping_charge, grand_total: (total_amount + shipping_charge).toFixed(2) };
   };
 

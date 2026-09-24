@@ -43,7 +43,7 @@ export default function Cart() {
   }, 0);
 
   const grandTotal = Number(cart?.total_amount || 0);
-  const shippingCharge = Number(cart?.shipping_charge ?? (grandTotal > 999 ? 100 : 0));
+  const shippingCharge = Number(cart?.shipping_charge ?? (grandTotal > 999 ? 0 : 100));
   const payableTotal = Number(cart?.grand_total ?? grandTotal + shippingCharge);
   const discountAmount = Math.max(0, totalMRP - grandTotal);
 
