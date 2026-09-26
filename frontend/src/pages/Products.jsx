@@ -11,7 +11,8 @@ import {
   FaStar, 
   FaTimes,
   FaShieldAlt,
-  FaHeart
+  FaHeart,
+  FaSlidersH
 } from 'react-icons/fa';
 
 const productResultsCache = new Map();
@@ -21,6 +22,7 @@ export default function Products() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
   const productsRequestId = useRef(0);
   const navigate = useNavigate();
   const { addToCart } = useContext(CartContext);
@@ -161,10 +163,27 @@ export default function Products() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
           
           {/* FLIPKART FILTER SIDEBAR */}
-          <aside className="lg:col-span-3 bg-white border border-gray-200 shadow-xs text-xs">
+          {showMobileFilters && (
+            <button
+              type="button"
+              aria-label="Close filters"
+              onClick={() => setShowMobileFilters(false)}
+              className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+            />
+          )}
+
+          <aside className={`lg:col-span-3 bg-white border border-gray-200 shadow-xs text-xs max-lg:fixed max-lg:inset-y-0 max-lg:left-0 max-lg:z-50 max-lg:w-[min(88vw,360px)] max-lg:overflow-y-auto max-lg:transition-transform max-lg:duration-300 ${showMobileFilters ? 'max-lg:translate-x-0' : 'max-lg:-translate-x-full'}`}>
             
             <div className="p-4 border-b border-gray-200 flex items-center justify-between">
               <span className="font-extrabold text-base text-gray-900 tracking-tight">Filters</span>
+              <button
+                type="button"
+                onClick={() => setShowMobileFilters(false)}
+                className="p-2 text-gray-500 hover:text-black lg:hidden"
+                aria-label="Close filters"
+              >
+                <FaTimes size={14} />
+              </button>
               {(categoryParam || subcategoryParam || brandParam || genderParam || colorParam || sizeParam || minPriceParam !== 'Min' || maxPriceParam !== '3000+') && (
                 <button
                   onClick={clearAllFilters}
@@ -482,6 +501,13 @@ export default function Products() {
 
           {/* PRODUCT LISTING MAIN GRID */}
           <main className="lg:col-span-9 space-y-3">
+            <button
+              type="button"
+              onClick={() => setShowMobileFilters(true)}
+              className="w-full bg-white border border-gray-200 px-4 py-3 text-xs font-black uppercase text-gray-900 lg:hidden"
+            >
+              <FaSlidersH className="mr-2 inline" /> Filters
+            </button>
             <div className="bg-white p-3.5 border border-gray-200 flex items-center justify-between">
               <span className="text-xs font-bold text-gray-700">
                 Showing <strong className="text-black">{products.length}</strong> items

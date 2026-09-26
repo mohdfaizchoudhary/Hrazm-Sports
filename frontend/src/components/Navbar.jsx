@@ -7,7 +7,6 @@ import {
   FaShoppingBag, 
   FaHeart,
   FaUser, 
-  FaBolt, 
   FaShieldAlt, 
   FaSignOutAlt,
   FaBars,
@@ -16,6 +15,7 @@ import {
   FaFire
 } from 'react-icons/fa';
 import { WishlistContext } from '../context/WishlistContext';
+import logo from '../assets/logo.png';
 
 export default function Navbar() {
   const { user, logout } = useContext(AuthContext);
@@ -87,10 +87,7 @@ export default function Navbar() {
           
           {/* ⚡ Compact Logo on Mobile */}
           <Link to="/" onClick={closeMenu} className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0 group">
-            <div className="w-7 h-7 sm:w-9 sm:h-9 bg-volt-500 text-black rounded-lg sm:rounded-xl flex items-center justify-center font-black text-sm sm:text-xl italic shadow-[0_0_15px_rgba(180,240,0,0.4)]">
-              <FaBolt size={14} className="sm:hidden" />
-              <FaBolt size={18} className="hidden sm:inline" />
-            </div>
+            <img src={logo} alt="Hrazm Sports logo" className="w-7 h-7 rounded-[20%] sm:w-9 sm:h-9 object-contain flex-shrink-0" />
             <div className="flex flex-col">
               <span className="font-black text-base sm:text-[18px] tracking-tighter text-white uppercase italic leading-none">
                 HRAZM <span className="text-volt-500">SPORTS</span>

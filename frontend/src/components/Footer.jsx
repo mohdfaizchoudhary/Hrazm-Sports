@@ -53,7 +53,7 @@ export default function Footer() {
             </a>
             <p className="flex items-start gap-2 leading-relaxed">
               <FaMapMarkerAlt className="mt-0.5 shrink-0" />
-              <span>D-205, Abul Fazal Enclave Part 1, Jamia Nagar, Okhla, New Delhi, Delhi 110025</span>
+              <span>New Delhi, 110025</span>
             </p>
           </div>
         </div>

@@ -452,7 +452,7 @@ export default function Checkout() {
                 Order Confirmed
               </span>
               <h2 className="text-2xl font-black italic uppercase text-black mt-2">
-                Order Received!
+                Order Successful.
               </h2>
               <p className="text-xs text-gray-500 mt-1 font-medium">
                 Order <strong className="text-black font-mono">#{orderSuccessModal.order_number}</strong> placed via <strong className="text-black uppercase">{paymentMethod}</strong> for ₹{Number(orderSuccessModal.total_amount).toLocaleString()}.

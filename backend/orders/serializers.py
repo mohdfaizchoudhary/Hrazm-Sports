@@ -11,13 +11,16 @@ class OrderUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'full_name']
+        fields = ['id', 'email', 'full_name', 'phone']
 
     def get_full_name(self, obj):
         if not obj:
             return "Customer"
         if hasattr(obj, 'get_full_name') and obj.get_full_name():
             return obj.get_full_name()
+        full_name = getattr(obj, 'full_name', '')
+        if full_name:
+            return full_name
         first = getattr(obj, 'first_name', '')
         last = getattr(obj, 'last_name', '')
         if first or last:

@@ -14,6 +14,7 @@ export default function Dashboard() {
   const { isWishlisted, toggleWishlist } = useContext(WishlistContext);
   const [searchParams] = useSearchParams();
   const searchTerm = searchParams.get('search')?.trim().toLowerCase() || '';
+  const searchTerms = searchTerm.split(/[^a-z0-9]+/).filter(Boolean);
 
   // ⚡ Dynamic Slider States
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -72,27 +73,28 @@ export default function Dashboard() {
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + activeSlides.length) % activeSlides.length);
 
   const currentProduct = activeSlides[currentSlide];
-  const matchingProducts = searchTerm
-    ? products.filter((product) => (
-      product.name?.toLowerCase().includes(searchTerm) ||
-      product.brand?.toLowerCase().includes(searchTerm) ||
-      product.category_name?.toLowerCase().includes(searchTerm) ||
-      product.description?.toLowerCase().includes(searchTerm)
-    ))
+  const matchingProducts = searchTerms.length
+    ? products.filter((product) => {
+      const searchableText = [product.name, product.brand, product.category_name, product.description]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, ' ');
+      return searchTerms.every((term) => searchableText.includes(term));
+    })
     : [];
 
   return (
-    <div className="space-y-8 pb-16 bg-white font-sans">
+    <div className="space-y-8 pb-16 pt-4 bg-white font-sans">
       
       {/* Coupon Banner */}
-      <div className="max-w-7xl mx-auto px-4 pt-4">
+      {/* <div className="max-w-7xl mx-auto px-4 pt-4">
         <div className="bg-dark-900 text-white border border-gray-800 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-volt-500 text-black rounded-xl flex items-center justify-center font-black text-xl italic">
               <FaBolt />
             </div>
             <div>
-              <div className="text-sm font-black uppercase italic">Hrazm Performance Store</div>
               <div className="text-[11px] text-gray-400">Official tournament gear & match equipment with express dispatch</div>
             </div>
           </div>
@@ -108,7 +110,7 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {searchTerm && (
         <section className="max-w-7xl mx-auto px-4 space-y-4" aria-label="Search results">

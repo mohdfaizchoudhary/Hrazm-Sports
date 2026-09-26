@@ -420,8 +420,12 @@ export default function AdminProducts() {
       (o.order_number && o.order_number.toLowerCase().includes(term)) ||
       (o.shipping_address && o.shipping_address.toLowerCase().includes(term)) ||
       (o.city && o.city.toLowerCase().includes(term)) ||
+      (o.state && o.state.toLowerCase().includes(term)) ||
+      (o.postal_code && o.postal_code.toLowerCase().includes(term)) ||
       (o.customer?.email && o.customer.email.toLowerCase().includes(term)) ||
-      (o.customer?.full_name && o.customer.full_name.toLowerCase().includes(term))
+      (o.customer?.full_name && o.customer.full_name.toLowerCase().includes(term)) ||
+      (o.customer?.phone && o.customer.phone.toLowerCase().includes(term)) ||
+      (o.items || []).some((item) => item.product_name?.toLowerCase().includes(term))
     );
 
     const status = (o.order_status || '').toLowerCase();
@@ -449,7 +453,14 @@ export default function AdminProducts() {
     return !term || (
       (ro.order_number && ro.order_number.toLowerCase().includes(term)) ||
       (ro.customer?.full_name && ro.customer.full_name.toLowerCase().includes(term)) ||
-      (ro.return_reason && ro.return_reason.toLowerCase().includes(term))
+      (ro.customer?.email && ro.customer.email.toLowerCase().includes(term)) ||
+      (ro.customer?.phone && ro.customer.phone.toLowerCase().includes(term)) ||
+      (ro.return_reason && ro.return_reason.toLowerCase().includes(term)) ||
+      (ro.shipping_address && ro.shipping_address.toLowerCase().includes(term)) ||
+      (ro.city && ro.city.toLowerCase().includes(term)) ||
+      (ro.state && ro.state.toLowerCase().includes(term)) ||
+      (ro.postal_code && ro.postal_code.toLowerCase().includes(term)) ||
+      (ro.items || []).some((item) => item.product_name?.toLowerCase().includes(term))
     );
   });
 
@@ -654,7 +665,9 @@ export default function AdminProducts() {
               <thead>
                 <tr className="bg-gray-50 text-gray-500 border-b border-gray-200 uppercase font-bold text-[10px]">
                   <th className="p-3.5">Order ID</th>
-                  <th className="p-3.5">Customer Details</th>
+                  <th className="p-3.5">Customer</th>
+                  <th className="p-3.5">Products</th>
+                  <th className="p-3.5">Delivery Address</th>
                   <th className="p-3.5">Payment</th>
                   <th className="p-3.5">Status</th>
                   <th className="p-3.5 text-right">Actions</th>
@@ -664,11 +677,34 @@ export default function AdminProducts() {
                 {filteredOrders.map((o) => (
                   <tr key={o.id} className="hover:bg-gray-50 transition-colors">
                     <td className="p-3.5 font-mono font-bold text-black">{o.order_number}</td>
-                    <td className="p-3.5">
-                      <div className="font-bold text-black">{o.customer?.full_name || 'Customer'}</div>
-                      <div className="text-[10px] text-gray-400">{o.customer?.email} • {o.customer?.phone}</div>
+                    <td className="p-3.5 min-w-[180px]">
+                      <div><span className="block text-[10px] uppercase text-gray-400">Name</span><span className="font-bold text-black">{o.customer?.full_name || 'Customer'}</span></div>
+                      <div className="mt-2"><span className="block text-[10px] uppercase text-gray-400">Email</span><span className="break-all">{o.customer?.email || 'Not provided'}</span></div>
+                      <div className="mt-2"><span className="block text-[10px] uppercase text-gray-400">Phone</span><span>{o.customer?.phone || 'Not provided'}</span></div>
                     </td>
-                    <td className="p-3.5">{o.payment_method} ({o.payment_status})</td>
+                    <td className="p-3.5 min-w-[220px]">
+                      {o.items?.length ? o.items.map((item) => (
+                        <div key={item.id} className="mb-2 border-b border-gray-100 pb-2 last:mb-0 last:border-0 last:pb-0">
+                          <div><span className="block text-[10px] uppercase text-gray-400">Product</span><span className="font-bold text-black">{item.product_name}</span></div>
+                          <div className="mt-1 grid grid-cols-2 gap-2">
+                            <div><span className="block text-[10px] uppercase text-gray-400">Quantity</span>{item.quantity}</div>
+                            <div><span className="block text-[10px] uppercase text-gray-400">Unit Price</span>₹{Number(item.price).toLocaleString()}</div>
+                            <div><span className="block text-[10px] uppercase text-gray-400">Subtotal</span>₹{Number(item.subtotal).toLocaleString()}</div>
+                          </div>
+                        </div>
+                      )) : <span>Not provided</span>}
+                      <div className="mt-2 border-t border-gray-200 pt-2"><span className="block text-[10px] uppercase text-gray-400">Order Total</span><span className="font-black">₹{Number(o.total_amount || 0).toLocaleString()}</span></div>
+                    </td>
+                    <td className="p-3.5 min-w-[200px]">
+                      <div><span className="block text-[10px] uppercase text-gray-400">Street Address</span>{o.shipping_address || 'Not provided'}</div>
+                      <div className="mt-2"><span className="block text-[10px] uppercase text-gray-400">City</span>{o.city || 'Not provided'}</div>
+                      <div className="mt-2"><span className="block text-[10px] uppercase text-gray-400">State</span>{o.state || 'Not provided'}</div>
+                      <div className="mt-2"><span className="block text-[10px] uppercase text-gray-400">Postal Code</span>{o.postal_code || 'Not provided'}</div>
+                    </td>
+                    <td className="p-3.5">
+                      <div><span className="block text-[10px] uppercase text-gray-400">Method</span>{o.payment_method}</div>
+                      <div className="mt-1"><span className="block text-[10px] uppercase text-gray-400">Payment Status</span>{o.payment_status}</div>
+                    </td>
                     <td className="p-3.5">
                       <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-volt-50 text-volt-800">
                         {o.order_status}
@@ -815,6 +851,8 @@ export default function AdminProducts() {
                   <tr className="bg-gray-50 text-gray-500 border-b border-gray-200 uppercase font-bold text-[10px]">
                     <th className="p-3.5">Order ID</th>
                     <th className="p-3.5">Customer</th>
+                    <th className="p-3.5">Products</th>
+                    <th className="p-3.5">Delivery Address</th>
                     <th className="p-3.5">Request Type</th>
                     <th className="p-3.5">Customer Reason / Selected Item</th>
                     <th className="p-3.5">Items in Order</th>
@@ -826,9 +864,33 @@ export default function AdminProducts() {
                   {filteredReturns.map((ro) => (
                     <tr key={ro.id} className="hover:bg-gray-50 transition-colors">
                       <td className="p-3.5 font-mono font-bold text-black">#{ro.order_number}</td>
-                      <td className="p-3.5">
-                        <div className="font-bold text-black">{ro.customer?.full_name}</div>
-                        <div className="text-[10px] text-gray-400">{ro.customer?.phone || ro.customer?.email}</div>
+                      <td className="p-3.5 min-w-[170px]">
+                        <div><span className="block text-[10px] uppercase text-gray-400">Name</span><span className="font-bold text-black">{ro.customer?.full_name || 'Customer'}</span></div>
+                        <div className="mt-1"><span className="block text-[10px] uppercase text-gray-400">Email</span><span className="break-all">{ro.customer?.email || 'Not provided'}</span></div>
+                        <div className="mt-1"><span className="block text-[10px] uppercase text-gray-400">Phone</span>{ro.customer?.phone || 'Not provided'}</div>
+                      </td>
+                      <td className="p-3.5 min-w-[200px]">
+                        {ro.items?.length ? ro.items.map((item) => (
+                          <div key={item.id} className="mb-2 border-b border-gray-100 pb-2 last:mb-0 last:border-0 last:pb-0">
+                            <div><span className="block text-[10px] uppercase text-gray-400">Product</span>{item.product_name}</div>
+                            <div className="mt-1 grid grid-cols-2 gap-2">
+                              <div><span className="block text-[10px] uppercase text-gray-400">Quantity</span>{item.quantity}</div>
+                              <div><span className="block text-[10px] uppercase text-gray-400">Unit Price</span>₹{Number(item.price).toLocaleString()}</div>
+                            </div>
+                          </div>
+                        )) : <span>Not provided</span>}
+                        {ro.original_product_name && ro.replacement_product_name && (
+                          <div className="mt-2 border-t border-gray-100 pt-2 text-purple-700">
+                            <span className="block text-[10px] uppercase">Replacement Item</span>
+                            {ro.original_product_name} → {ro.replacement_product_name}
+                          </div>
+                        )}
+                      </td>
+                      <td className="p-3.5 min-w-[190px]">
+                        <div><span className="block text-[10px] uppercase text-gray-400">Street Address</span>{ro.shipping_address || 'Not provided'}</div>
+                        <div className="mt-1"><span className="block text-[10px] uppercase text-gray-400">City</span>{ro.city || 'Not provided'}</div>
+                        <div className="mt-1"><span className="block text-[10px] uppercase text-gray-400">State</span>{ro.state || 'Not provided'}</div>
+                        <div className="mt-1"><span className="block text-[10px] uppercase text-gray-400">Postal Code</span>{ro.postal_code || 'Not provided'}</div>
                       </td>
                       <td className="p-3.5">
                         <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase ${

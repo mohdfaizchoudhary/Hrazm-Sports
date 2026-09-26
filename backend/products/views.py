@@ -1,6 +1,7 @@
 from rest_framework import generics, permissions
 from django.db.models import F, Q
 from decimal import Decimal
+import re
 from .models import Product
 from .serializers import ProductListSerializer, ProductDetailSerializer
 
@@ -101,9 +102,15 @@ class ProductListCreateView(generics.ListCreateAPIView):
 
         search = self.request.query_params.get('search')
         if search:
-            queryset = queryset.filter(
-                Q(name__icontains=search) | Q(description__icontains=search) | Q(brand__icontains=search)
-            )
+            search_terms = re.findall(r'\w+', search.casefold())
+            for term in search_terms:
+                queryset = queryset.filter(
+                    Q(name__icontains=term) |
+                    Q(description__icontains=term) |
+                    Q(brand__icontains=term) |
+                    Q(category__name__icontains=term) |
+                    Q(subcategory__name__icontains=term)
+                )
 
         return queryset
 
