@@ -52,6 +52,17 @@ API.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+    const status = error.response?.status;
+    const retryableGetFailure =
+      originalRequest?.method?.toLowerCase() === 'get' &&
+      (!status || [408, 429, 500, 502, 503, 504].includes(status));
+
+    if (retryableGetFailure && (originalRequest._getRetryCount || 0) < 2) {
+      originalRequest._getRetryCount = (originalRequest._getRetryCount || 0) + 1;
+      await new Promise((resolve) => setTimeout(resolve, 1000 * originalRequest._getRetryCount));
+      return API(originalRequest);
+    }
+
     const refreshToken = localStorage.getItem('refresh_token');
 
     if (error.response?.status !== 401 || originalRequest?._retry || !refreshToken) {
