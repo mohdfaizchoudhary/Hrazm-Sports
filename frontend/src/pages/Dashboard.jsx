@@ -9,7 +9,14 @@ import {
 } from 'react-icons/fa';
 
 export default function Dashboard() {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(() => {
+    try {
+      const cachedProducts = JSON.parse(localStorage.getItem('dashboard_products') || '[]');
+      return Array.isArray(cachedProducts) ? cachedProducts : [];
+    } catch {
+      return [];
+    }
+  });
   const { addToCart } = useContext(CartContext);
   const { isWishlisted, toggleWishlist } = useContext(WishlistContext);
   const [searchParams] = useSearchParams();
@@ -45,6 +52,11 @@ export default function Dashboard() {
       .then((res) => {
         const prodList = Array.isArray(res.data) ? res.data : (res.data.results || []);
         setProducts(prodList);
+        try {
+          localStorage.setItem('dashboard_products', JSON.stringify(prodList));
+        } catch {
+          // Keep the storefront usable when storage is unavailable or full.
+        }
       })
       .catch((err) => console.error(err));
   }, []);
