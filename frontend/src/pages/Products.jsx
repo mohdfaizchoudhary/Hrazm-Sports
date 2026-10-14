@@ -172,7 +172,7 @@ export default function Products() {
             />
           )}
 
-          <aside className={`lg:col-span-3 bg-white border border-gray-200 shadow-xs text-xs max-lg:fixed max-lg:inset-y-0 max-lg:left-0 max-lg:z-50 max-lg:w-[min(88vw,360px)] max-lg:overflow-y-auto max-lg:transition-transform max-lg:duration-300 ${showMobileFilters ? 'max-lg:translate-x-0' : 'max-lg:-translate-x-full'}`}>
+          <aside className={`lg:col-span-3 lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto bg-white border border-gray-200 shadow-xs text-xs max-lg:fixed max-lg:inset-y-0 max-lg:left-0 max-lg:z-50 max-lg:w-[min(88vw,360px)] max-lg:overflow-y-auto max-lg:transition-transform max-lg:duration-300 ${showMobileFilters ? 'max-lg:translate-x-0' : 'max-lg:-translate-x-full'}`}>
             
             <div className="p-4 border-b border-gray-200 flex items-center justify-between">
               <span className="font-extrabold text-base text-gray-900 tracking-tight">Filters</span>

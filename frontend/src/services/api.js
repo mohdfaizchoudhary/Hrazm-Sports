@@ -57,9 +57,11 @@ API.interceptors.response.use(
       originalRequest?.method?.toLowerCase() === 'get' &&
       (!status || [408, 429, 500, 502, 503, 504].includes(status));
 
-    if (retryableGetFailure && (originalRequest._getRetryCount || 0) < 2) {
-      originalRequest._getRetryCount = (originalRequest._getRetryCount || 0) + 1;
-      await new Promise((resolve) => setTimeout(resolve, 1000 * originalRequest._getRetryCount));
+    const retryCount = originalRequest?._getRetryCount || 0;
+    if (retryableGetFailure && retryCount < 10) {
+      originalRequest._getRetryCount = retryCount + 1;
+      const retryDelay = Math.min(1000 * (2 ** retryCount), 10000);
+      await new Promise((resolve) => setTimeout(resolve, retryDelay));
       return API(originalRequest);
     }
 
